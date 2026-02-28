@@ -1,0 +1,29 @@
+name: Daily DevSync Update
+
+on:
+  schedule:
+    # This cron syntax means: Run at 14:30 (2:30 PM) every single day
+    - cron: '30 14 * * *'
+  workflow_dispatch: # This is a magic button that lets us test it manually!
+
+permissions:
+  contents: write # This gives the robot permission to push code back to the repo
+
+jobs:
+  daily-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update log for 24f2004755@ds.study.iitm.ac.in
+        run: |
+          echo "Automated update on $(date)" >> activity.log
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git add activity.log
+          git commit -m "Automated daily update"
+          git push
